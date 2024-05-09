@@ -38,12 +38,14 @@ runs:
       if: steps.cache-butler.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        wget -O butler.zip https://broth.itch.ovh/butler/windows-amd64/LATEST/archive/default
+        curl -L -o butler.zip https://broth.itch.ovh/butler/windows-amd64/LATEST/archive/default
         unzip butler.zip
-        butler -V
+        chmod +x butler
+        ./butler -V
+      
 
     - name: Upload to itchio
       shell: bash
       env: 
         BUTLER_API_KEY: ${{ inputs.api-key }}
-      run: butler push ${{ inputs.working-directory }} ${{ inputs.user }}/${{ inputs.game }}:${{ inputs.channel }}
+      run: ./butler push ${{ inputs.working-directory }} ${{ inputs.user }}/${{ inputs.game }}:${{ inputs.channel }}
